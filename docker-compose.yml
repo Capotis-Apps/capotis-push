@@ -1,0 +1,18 @@
+# Capotis Push 1.0.0 — servidor de notificaciones para Capotis Mail
+# Arranque:  docker compose up -d
+# Panel web: http://IP-DE-TU-SERVIDOR:7391
+services:
+  capotis-push:
+    build: .
+    container_name: capotis-push
+    restart: unless-stopped
+    ports:
+      - "7391:7391"          # Puerto raro a propósito para no chocar con otros programas
+    environment:
+      PORT: "7391"           # Si lo cambias, cambia también el número de la izquierda en "ports"
+      TZ: "Europe/Madrid"
+    volumes:
+      - capotis-push-data:/data
+
+volumes:
+  capotis-push-data:

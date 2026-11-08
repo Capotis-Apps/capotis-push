@@ -1,0 +1,14 @@
+{
+  "name": "capotis-push",
+  "version": "1.0.0",
+  "description": "Servidor de notificaciones push (APNs directo) para Capotis Mail",
+  "main": "server.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": { "start": "node server.js" },
+  "dependencies": {
+    "express": "^4.19.2",
+    "imapflow": "^1.0.164"
+  },
+  "engines": { "node": ">=18" }
+}

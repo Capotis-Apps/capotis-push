@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Capotis Push</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23161b22'/%3E%3Cellipse cx='50' cy='58' rx='26' ry='16' fill='%23f4f6f8'/%3E%3Ccircle cx='68' cy='42' r='11' fill='%23f4f6f8'/%3E%3Cpolygon points='76,40 90,45 76,49' fill='%239aa3ad'/%3E%3Cellipse cx='48' cy='56' rx='16' ry='9' fill='%235b8db8'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f3f5f8; --card:rgba(255,255,255,.78); --card-b:rgba(20,30,50,.08); --text:#0f1720; --muted:#5b6675;
+  --accent:#5b8db8; --accent-2:#3f6f9c; --ok:#22a45d; --bad:#e5484d; --warn:#e8912d; --field:#fff; --shadow:0 20px 50px rgba(20,40,70,.12);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0b0e13; --card:rgba(26,32,42,.72); --card-b:rgba(255,255,255,.08); --text:#eef2f7; --muted:#97a3b3;
+  --accent:#6ea0cd; --accent-2:#4d82b0; --field:rgba(255,255,255,.06); --shadow:0 24px 60px rgba(0,0,0,.45);
+}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{font:16px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg);
+  background-image:radial-gradient(900px 500px at 15% -10%,rgba(91,141,184,.28),transparent 60%),radial-gradient(700px 500px at 100% 10%,rgba(110,90,200,.14),transparent 60%);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:28px 18px 80px}
+header{display:flex;align-items:center;gap:14px;margin:8px 0 22px}
+.logo{width:54px;height:54px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.25);flex:none}
+h1{font-size:26px;letter-spacing:-.02em;margin:0}
+.sub{color:var(--muted);font-size:14px}
+.ver{margin-left:auto;font-size:12px;color:var(--muted);border:1px solid var(--card-b);padding:3px 10px;border-radius:99px}
+.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+.st{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:default;position:relative}
+.st .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--card);border:1px solid var(--card-b);transition:all .4s cubic-bezier(.3,1.4,.5,1)}
+.st.active .dot{background:var(--accent);color:#fff;border-color:transparent;transform:scale(1.12);box-shadow:0 8px 20px rgba(91,141,184,.45)}
+.st.done .dot{background:var(--ok);color:#fff;border-color:transparent}
+.st.done{cursor:pointer}
+.st.active{color:var(--text);font-weight:600}
+.st::after{content:"";position:absolute;top:17px;left:calc(50% + 22px);width:calc(100% - 44px);height:2px;background:var(--card-b)}
+.st:last-child::after{display:none}
+.st.done::after{background:var(--ok)}
+.card{background:var(--card);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid var(--card-b);border-radius:24px;padding:26px;box-shadow:var(--shadow);animation:rise .5s cubic-bezier(.2,.9,.3,1)}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+h2{margin:0 0 6px;font-size:22px;letter-spacing:-.015em}
+p{margin:8px 0}.muted{color:var(--muted)}
+label{display:block;font-size:13px;font-weight:600;margin:16px 0 6px;color:var(--muted)}
+input[type=text],input[type=password],input[type=number]{width:100%;padding:13px 14px;font:inherit;color:var(--text);background:var(--field);border:1px solid var(--card-b);border-radius:14px;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(91,141,184,.25)}
+.row{display:flex;gap:12px}.row>*{flex:1}
+button{font:inherit;font-weight:600;border:0;border-radius:14px;padding:13px 20px;cursor:pointer;color:#fff;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 8px 20px rgba(63,111,156,.35);transition:transform .15s,opacity .2s,box-shadow .2s}
+button:hover{transform:translateY(-1px)}button:active{transform:scale(.97)}
+button:disabled{opacity:.55;cursor:default;transform:none}
+button.ghost{background:transparent;color:var(--text);border:1px solid var(--card-b);box-shadow:none}
+button.full{width:100%;margin-top:20px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.msg{margin-top:16px;padding:14px 16px;border-radius:16px;font-size:15px;animation:rise .35s}
+.msg.ok{background:rgba(34,164,93,.14);border:1px solid rgba(34,164,93,.35)}
+.msg.bad{background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.35)}
+.msg.warn{background:rgba(232,145,45,.13);border:1px solid rgba(232,145,45,.35)}
+details{margin-top:10px}summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)}
+pre{white-space:pre-wrap;word-break:break-word;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--field);border:1px solid var(--card-b);padding:12px;border-radius:12px;margin:8px 0 0}
+.spin{width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;display:inline-block;vertical-align:-3px;margin-right:8px;animation:sp .8s linear infinite}
+.spin.dark{border-color:var(--card-b);border-top-color:var(--accent)}
+@keyframes sp{to{transform:rotate(360deg)}}
+ol.guide{padding-left:0;list-style:none;counter-reset:g;margin:14px 0}
+ol.guide li{counter-increment:g;display:flex;gap:12px;margin:10px 0}
+ol.guide li::before{content:counter(g);flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center;margin-top:2px}
+code{font:13px ui-monospace,Menlo,monospace;background:var(--field);border:1px solid var(--card-b);padding:1px 6px;border-radius:6px}
+.file{display:flex;align-items:center;gap:12px;margin-top:6px}
+.file .name{font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.check{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:15px}
+.check input{width:20px;height:20px;accent-color:var(--accent)}
+.devs{margin:14px 0;padding:0;list-style:none}
+.devs li{padding:10px 14px;border:1px solid var(--card-b);border-radius:14px;margin-bottom:8px;display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.top{display:flex;justify-content:flex-end;margin-bottom:10px}
+.top button{padding:8px 14px;font-size:13px}
+footer{margin-top:26px;text-align:center;font-size:12px;color:var(--muted)}
+.big{font-size:54px;text-align:center;margin:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="logo" viewBox="0 0 1024 1024" aria-label="Capotis"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e232a"/><stop offset="1" stop-color="#0c0e12"/></linearGradient></defs>
+      <rect width="1024" height="1024" fill="url(#g)"/>
+      <polygon points="160,610 300,650 330,700 150,700 190,650" fill="#9aa3ad"/>
+      <path d="M720 400C760 560 640 740 430 740C330 740 270 690 300 630C380 580 450 450 560 370C620 325 700 330 720 400Z" fill="#f4f6f8"/>
+      <circle cx="685" cy="395" r="78" fill="#f4f6f8"/><polygon points="745,385 860,430 748,462" fill="#9aa3ad"/>
+      <path d="M340 570C400 450 530 420 640 450C600 560 500 660 390 670C350 640 335 600 340 570Z" fill="#5b8db8"/><circle cx="700" cy="385" r="14" fill="#0e1014"/></svg>
+    <div><h1>Capotis Push</h1><div class="sub">Notificaciones para Capotis Mail</div></div>
+    <span class="ver" id="ver">v1.0.0</span>
+  </header>
+  <div class="stepper" id="stepper"></div>
+  <div id="view"></div>
+  <footer>Tu servidor, tus datos. Capotis Apps no recibe nada de lo que pasa aquí.</footer>
+</div>
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const view = $('#view');
+let S = null;            // estado del servidor
+let step = 1;            // paso visible
+const NAMES = ['Crear cuenta', 'Conectar Mailcow', 'Llave de Apple', 'Probar'];
+
+async function api(path, body) {
+  const r = await fetch(path, body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  let j = {}; try { j = await r.json(); } catch {}
+  if (!r.ok && !j.friendly && !j.error) j.error = 'Error ' + r.status;
+  j._status = r.status; return j;
+}
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function busy(btn, text) { btn.disabled = true; btn.dataset.t = btn.innerHTML; btn.innerHTML = `<span class="spin"></span>${text}`; }
+function idle(btn) { btn.disabled = false; btn.innerHTML = btn.dataset.t; }
+function result(el, ok, friendly, technical, kind) {
+  el.innerHTML = `<div class="msg ${kind || (ok ? 'ok' : 'bad')}">${ok ? '✅ ' : ''}${esc(friendly)}${technical ? `<details><summary>Ver error completo</summary><pre>${esc(technical)}</pre></details>` : ''}</div>`;
+}
+function currentStep() {
+  if (!S.hasUser || !S.loggedIn) return 1;
+  if (!S.mailcowConfigured) return 2;
+  if (!S.appleConfigured || !(S.apple && S.apple.verified)) return 3;
+  return 4;
+}
+function drawStepper() {
+  const max = S.loggedIn ? currentStep() : 1;
+  $('#stepper').innerHTML = NAMES.map((n, i) => {
+    const k = i + 1, cls = k === step ? 'active' : (k < max || (k < step) ? 'done' : '');
+    return `<div class="st ${cls}" data-k="${k}"><div class="dot">${cls === 'done' ? '✓' : k}</div>${n}</div>`;
+  }).join('');
+  document.querySelectorAll('.st.done').forEach((el) => el.onclick = () => { step = +el.dataset.k; render(); });
+}
+async function refresh(goNext) {
+  S = await api('/api/state');
+  $('#ver').textContent = 'v' + S.version;
+  if (goNext || step === 0) step = currentStep();
+  render();
+}
+function render() {
+  drawStepper();
+  const top = S.loggedIn ? `<div class="top"><button class="ghost" id="logout">Cerrar sesión</button></div>` : '';
+  const fn = { 1: viewAccount, 2: viewMailcow, 3: viewApple, 4: viewTest }[S.loggedIn ? step : 1];
+  view.innerHTML = top + `<div class="card" id="card"></div>`;
+  fn($('#card'));
+  const lo = $('#logout'); if (lo) lo.onclick = async () => { await api('/api/logout', {}); step = 1; refresh(); };
+}
+
+// ── Paso 1
+function viewAccount(c) {
+  if (S.hasUser && !S.loggedIn) {
+    c.innerHTML = `<h2>Bienvenido de nuevo</h2><p class="muted">Entra con el usuario y la contraseña que creaste.</p>
+      <label>Usuario</label><input id="u" type="text" autocomplete="username" autocapitalize="none">
+      <label>Contraseña</label><input id="p" type="password" autocomplete="current-password">
+      <button class="full" id="go">Entrar</button><div id="out"></div>`;
+    const go = async () => { const b = $('#go'); busy(b, 'Entrando…'); const r = await api('/api/login', { username: $('#u').value, password: $('#p').value }); idle(b);
+      if (r.ok) { step = 0; refresh(true); } else result($('#out'), false, r.error || 'No se pudo entrar'); };
+    $('#go').onclick = go; $('#p').addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); }); return;
+  }
+  if (S.hasUser && S.loggedIn) {
+    c.innerHTML = `<div class="big">✅</div><h2 style="text-align:center">Tu cuenta está lista</h2>
+      <p class="muted" style="text-align:center">Usuario: <b>${esc(S.username)}</b>. Estos mismos datos los pondrás en la app (IP, usuario y contraseña).</p>
+      <button class="full" id="next">Continuar</button>`;
+    $('#next').onclick = () => { step = 2; render(); }; return;
+  }
+  c.innerHTML = `<h2>1 · Crea tu cuenta</h2>
+    <p class="muted">Este usuario y esta contraseña protegen tu panel. Son <b>los mismos que escribirás en la app</b> de tu iPhone.</p>
+    <label>Usuario</label><input id="u" type="text" autocomplete="username" autocapitalize="none" placeholder="por ejemplo: marcos">
+    <label>Contraseña (mínimo 8 caracteres)</label><input id="p" type="password" autocomplete="new-password">
+    <label>Repite la contraseña</label><input id="p2" type="password" autocomplete="new-password">
+    <button class="full" id="go">Crear cuenta</button><div id="out"></div>`;
+  $('#go').onclick = async () => {
+    if ($('#p').value !== $('#p2').value) return result($('#out'), false, 'Las contraseñas no coinciden.');
+    const b = $('#go'); busy(b, 'Creando…'); const r = await api('/api/setup', { username: $('#u').value, password: $('#p').value }); idle(b);
+    if (r.ok) { step = 0; refresh(true); } else result($('#out'), false, r.error || 'No se pudo crear la cuenta');
+  };
+}
+
+// ── Paso 2
+function viewMailcow(c) {
+  const m = S.mailcow;
+  c.innerHTML = `<h2>2 · Conecta Mailcow</h2>
+    <p class="muted">Para avisarte de los correos nuevos, este servidor necesita poder conectarse a tu servidor de correo Mailcow.</p>
+    <p><b>¿Tienes Mailcow instalado?</b></p>
+    <div class="choice"><button id="yes">Sí, ya lo tengo</button><button class="ghost" id="no">No todavía</button></div>
+    <div id="area"></div>`;
+  const area = $('#area');
+  $('#no').onclick = () => { area.innerHTML = `<div class="msg warn">Necesitas Mailcow para continuar. Es gratis: sigue su guía de instalación en <b>docs.mailcow.email</b>. Cuando lo tengas funcionando, vuelve aquí y pulsa «Sí, ya lo tengo».</div>`; };
+  const form = () => {
+    area.innerHTML = `<label>Dirección de Mailcow (nombre o IP)</label><input id="h" type="text" autocapitalize="none" placeholder="mail.tudominio.com  ·  100.78.183.61" value="${esc(m ? m.host : '')}">
+      <div class="row"><div><label>Puerto IMAP</label><input id="pt" type="number" value="${m ? m.port : 993}"></div></div>
+      <label class="check"><input type="checkbox" id="ss" ${m && m.selfSigned ? 'checked' : ''}> Mi servidor usa certificado propio (o accedo por IP)</label>
+      <button class="full" id="chk">Comprobar Mailcow</button><div id="out"></div>`;
+    $('#chk').onclick = async () => {
+      const b = $('#chk'); busy(b, 'Comprobando…');
+      const r = await api('/api/mailcow/check', { host: $('#h').value, port: $('#pt').value, selfSigned: $('#ss').checked }); idle(b);
+      if (r.error) return result($('#out'), false, r.error);
+      result($('#out'), r.ok, r.friendly, r.ok ? null : r.technical);
+      if (r.ok) { $('#out').insertAdjacentHTML('beforeend', `<button class="full" id="n">Continuar</button>`); api('/api/state').then((s) => { S = s; }); $('#n').onclick = () => { step = 3; render(); }; }
+    };
+  };
+  $('#yes').onclick = form;
+  if (m) form();
+}
+
+// ── Paso 3
+function viewApple(c) {
+  const a = S.apple || {};
+  c.innerHTML = `<h2>3 · Llave de Apple</h2>
+    <p class="muted">Apple exige una llave para que tu servidor pueda mandar avisos a tu iPhone. Necesitas una cuenta de <b>Apple Developer</b>.</p>
+    <ol class="guide">
+      <li><div>Entra en <b>developer.apple.com/account</b> y abre <b>Certificates, Identifiers &amp; Profiles → Keys</b>.</div></li>
+      <li><div>Pulsa <b>+</b>, ponle un nombre, marca <b>Apple Push Notifications service (APNs)</b> y crea la llave.</div></li>
+      <li><div><b>Descarga el archivo .p8</b> (solo te deja una vez, guárdalo bien) y apunta el <b>Key ID</b> que verás.</div></li>
+      <li><div>Tu <b>Team ID</b> (10 letras/números) está en <b>Membership details</b>.</div></li>
+    </ol>
+    <label>Team ID</label><input id="t" type="text" autocapitalize="characters" maxlength="10" value="${esc(a.teamId || '')}">
+    <label>Key ID</label><input id="k" type="text" autocapitalize="characters" maxlength="10" value="${esc(a.keyId || '')}">
+    <label>Bundle ID de la app</label><input id="b" type="text" autocapitalize="none" value="${esc(a.bundleId || 'com.capotis.apps.mail')}">
+    <label>Archivo de la llave (.p8)</label>
+    <div class="file"><button class="ghost" id="pick" type="button">Subir archivo .p8</button><span class="name" id="fname">${S.appleConfigured ? 'Ya hay una llave guardada' : 'Ningún archivo'}</span></div>
+    <input id="f" type="file" accept=".p8,text/plain" hidden>
+    <button class="full" id="save">Guardar y comprobar</button><div id="out"></div>`;
+  let p8 = '';
+  $('#pick').onclick = () => $('#f').click();
+  $('#f').onchange = async (e) => { const f = e.target.files[0]; if (!f) return; p8 = await f.text(); $('#fname').textContent = f.name; };
+  $('#save').onclick = async () => {
+    const b = $('#save'); busy(b, 'Comprobando con Apple…');
+    const r = await api('/api/apple/save', { teamId: $('#t').value, keyId: $('#k').value, bundleId: $('#b').value, p8: p8 || undefined }); idle(b);
+    result($('#out'), r.ok, r.friendly || r.error, r.ok ? null : r.technical);
+    if (r.ok) { $('#out').insertAdjacentHTML('beforeend', `<button class="full" id="n">Continuar</button>`); $('#n').onclick = async () => { S = await api('/api/state'); step = 4; render(); }; }
+  };
+}
+
+// ── Paso 4
+async function viewTest(c) {
+  const d = await api('/api/devices');
+  const list = (d.devices || []);
+  c.innerHTML = `<h2>4 · Probar notificación</h2>
+    <p class="muted">Todo está listo. Manda una notificación de prueba a tu iPhone.</p>
+    ${list.length ? `<ul class="devs">${list.map((x) => `<li><span>📱 <b>${esc(x.name)}</b> · ${x.accounts.length} cuenta(s)</span><span class="muted">${esc(x.env === 'development' ? 'pruebas' : 'App Store')}</span></li>`).join('')}</ul>`
+      : `<div class="msg warn">Aún no hay ningún iPhone conectado. En la app: <b>Ajustes → Notificaciones</b>, actívalas y escribe la IP de este servidor, tu usuario y tu contraseña.</div>`}
+    <button class="full" id="test">Mandar notificación de prueba</button><div id="out"></div>`;
+  $('#test').onclick = async () => {
+    const b = $('#test'); busy(b, 'Enviando…'); const out = $('#out'); out.innerHTML = '';
+    const r = await api('/api/apple/test', {}); idle(b);
+    if (!r.results || !r.results.length) return result(out, false, r.friendly || r.error, r.technical);
+    for (const x of r.results) result_add(out, x);
+    if (r.ok) waitAck(r.testId, out);
+  };
+}
+function result_add(out, x) {
+  out.insertAdjacentHTML('beforeend', `<div class="msg ${x.ok ? 'ok' : 'bad'}"><b>${esc(x.device)}</b><br>${x.ok ? '✅ ' : ''}${esc(x.friendly)}<details><summary>${x.ok ? 'Ver detalles' : 'Ver error completo'}</summary><pre>${esc(x.technical)}</pre></details></div>`);
+}
+async function waitAck(id, out) {
+  out.insertAdjacentHTML('beforeend', `<div class="msg warn" id="wait"><span class="spin dark"></span>Apple la aceptó. Esperando confirmación de tu iPhone…</div>`);
+  for (let i = 0; i < 15; i++) {
+    await new Promise((r) => setTimeout(r, 2000));
+    const r = await api('/api/test/' + id);
+    if (r.acked) { $('#wait').className = 'msg ok'; $('#wait').innerHTML = '🎉 ¡Confirmado! Tu iPhone ha recibido la notificación. Todo funciona.'; return; }
+  }
+  $('#wait').className = 'msg warn';
+  $('#wait').innerHTML = `Apple dice que la <b>aceptó</b>, pero tu iPhone no ha confirmado que le llegara.
+    <details open><summary>Qué revisar</summary><pre>• Mira si te ha sonado o aparece en la pantalla de bloqueo (a veces llega sin confirmar si la app está cerrada del todo).
+• Ajustes del iPhone → Notificaciones → Capotis Mail: deben estar permitidas.
+• Revisa que no tengas un Modo Concentración / No molestar activo.
+• Comprueba que el iPhone tiene internet (Wi-Fi o datos).
+• Si la app es de pruebas (Xcode) y la del App Store a la vez, desactiva y vuelve a activar las notificaciones en la app.</pre></details>`;
+}
+refresh(true);
+</script>
+</body>
+</html>
