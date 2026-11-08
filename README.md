@@ -28,7 +28,7 @@ Tus correos nunca pasan por Capotis Apps, ni por Google, ni por nadie. Todo se q
 ## Instalación rápida
 
 ```bash
-git clone https://github.com/capotisapps/capotis-push.git
+git clone https://github.com/Capotis-Apps/capotis-push.git
 cd capotis-push
 docker compose up -d
 ```
@@ -62,7 +62,7 @@ Capotis Push comprobará que la clave es válida.
 
 ### 4. Conecta Capotis Mail
 En tu iPhone, en Capotis Mail > Ajustes > Notificaciones > Activar:
-- Pon la IP de tu servidor (por ejemplo por Tailscale: `100.78.183.61`)
+- Pon la IP de tu servidor (por ejemplo por Tailscale: `100.67.123.23`)
 - Pon el puerto (por ejemplo `7391`)
 - Pon el usuario y contraseña que creaste en el paso 1
 - Dale a "Probar conexión"
@@ -97,4 +97,4 @@ Lee el archivo `LICENSE` para el texto completo.
 
 - App: Capotis Mail por Capotis Apps
 - Correo: contacto@capotisapps.com
-- Web: https://omdorganization.com
+- Web: https://capotisapps.com
